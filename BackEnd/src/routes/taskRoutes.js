@@ -1,18 +1,21 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const taskController = require('../controllers/taskController');
+const taskController = require("../controllers/taskController");
 
 // This maps to POST http://localhost:3000/api/tasks/
-router.post('/', taskController.createTask);
+router.post("/", taskController.createTask);
 
 // This maps to GET http://localhost:3000/api/tasks/
-router.get('/', taskController.getTasks);
+router.get("/", taskController.getTasks);
+
+// This route is unique because it doesn't return raw data, but an AI insight
+router.get("/ai-summary", taskController.getAiSummary);
 
 // This maps to GET http://localhost:3000/api/tasks/:id
-router.get('/:id', taskController.getTaskById);
+router.get("/:id", taskController.getTaskById);
 // This maps to PATCH http://localhost:3000/api/tasks/:id
-router.patch('/:id', taskController.updateTask);
+router.patch("/:id", taskController.updateTask);
 // This maps to DELETE http://localhost:3000/api/tasks/:id
-router.delete('/:id', taskController.deleteTask);
+router.delete("/:id", taskController.deleteTask);
 
 module.exports = router;

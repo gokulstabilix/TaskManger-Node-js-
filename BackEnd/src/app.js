@@ -1,11 +1,8 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const taskRoutes = require('./routes/taskRoutes');
-const globalErrorHandler = require('./middlewares/errorMiddleware');
-
-// Load environment variables from .env file
-dotenv.config();
+const express = require("express");
+require("dotenv").config();
+const connectDB = require("./config/db");
+const taskRoutes = require("./routes/taskRoutes");
+const globalErrorHandler = require("./middlewares/errorMiddleware");
 
 // Connect to database
 connectDB();
@@ -16,12 +13,12 @@ const app = express();
 app.use(express.json());
 
 // A simple "Health Check" route
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'UP', message: 'Server is running!' });
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "UP", message: "Server is running!" });
 });
 
 // Mount the router
-app.use('/api/tasks', taskRoutes);
+app.use("/api/tasks", taskRoutes);
 
 // Global Error Handling Middleware (must be after all routes)
 app.use(globalErrorHandler);
