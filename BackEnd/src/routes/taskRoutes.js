@@ -18,4 +18,7 @@ router.patch("/:id", taskController.updateTask);
 // This maps to DELETE http://localhost:3000/api/tasks/:id
 router.delete("/:id", taskController.deleteTask);
 
+// Put this with your other specialized routes
+router.post('/chat', taskController.chatWithTasks);
+
 module.exports = router;

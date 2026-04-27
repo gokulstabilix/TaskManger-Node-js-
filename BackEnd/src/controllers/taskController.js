@@ -109,3 +109,29 @@ exports.getAiSummary = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+// @desc    Chat with the AI about your tasks
+// @route   POST /api/tasks/chat
+exports.chatWithTasks = catchAsync(async (req, res, next) => {
+  const { message } = req.body;
+
+  if (!message) {
+    const error = new Error('Please provide a message');
+    error.statusCode = 400;
+    return next(error);
+  }
+
+  // 1. Get the context (all tasks)
+  const tasks = await Task.find();
+
+  // 2. Get the AI's response
+  const response = await aiService.chatWithTasks(tasks, message);
+
+  // 3. Send back the answer
+  res.status(200).json({
+    status: 'success',
+    data: {
+      reply: response
+    }
+  });
+});

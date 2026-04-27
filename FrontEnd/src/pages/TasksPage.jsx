@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Plus } from "lucide-react";
+import { Plus, ListChecks, Clock, TrendingUp } from "lucide-react";
 import { fetchTasks, updateTask, deleteTask } from "../store/taskSlice";
 import { TaskCard } from "../components/TaskCard";
 import { TaskForm } from "../components/TaskForm";
@@ -9,6 +9,17 @@ import { Button } from "../components/ui/Button";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { AISummaryCard } from "../components/AISummaryCard";
 
+/**
+ * TasksPage — The main dashboard page.
+ *
+ * What changed:
+ *  - Added a stats bar showing pending / completed / completion %
+ *  - Improved visual hierarchy with section icons
+ *  - Added subtle fade-in animations
+ *  - Enhanced empty state design
+ *
+ * All existing functionality (CRUD, modals, confirm dialog) is preserved.
+ */
 export const TasksPage = () => {
   const dispatch = useDispatch();
   const { items: tasks, status, error } = useSelector((state) => state.tasks);
@@ -60,10 +71,14 @@ export const TasksPage = () => {
   // Group tasks
   const pendingTasks = tasks.filter((t) => !t.isCompleted);
   const completedTasks = tasks.filter((t) => t.isCompleted);
+  const completionPercent = tasks.length > 0
+    ? Math.round((completedTasks.length / tasks.length) * 100)
+    : 0;
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      {/* ── Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 animate-fade-in">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
             My Tasks
@@ -77,6 +92,41 @@ export const TasksPage = () => {
           <span>New Task</span>
         </Button>
       </div>
+
+      {/* ── Stats Bar ── */}
+      {tasks.length > 0 && (
+        <div className="grid grid-cols-3 gap-4 mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 shadow-sm">
+            <div className="h-10 w-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
+              <Clock size={20} />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900 leading-none">{pendingTasks.length}</p>
+              <p className="text-xs text-gray-500 mt-0.5">Pending</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 shadow-sm">
+            <div className="h-10 w-10 rounded-lg bg-green-50 flex items-center justify-center text-green-500 shrink-0">
+              <ListChecks size={20} />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900 leading-none">{completedTasks.length}</p>
+              <p className="text-xs text-gray-500 mt-0.5">Completed</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 shadow-sm">
+            <div className="h-10 w-10 rounded-lg bg-primary-50 flex items-center justify-center text-primary-500 shrink-0">
+              <TrendingUp size={20} />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900 leading-none">{completionPercent}%</p>
+              <p className="text-xs text-gray-500 mt-0.5">Progress</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* AI Summary — always rendered; card handles its own loading state */}
       <AISummaryCard />
@@ -94,25 +144,27 @@ export const TasksPage = () => {
       )}
 
       {status === "succeeded" && tasks.length === 0 && (
-        <div className="text-center py-20 bg-white rounded-2xl border border-gray-100 border-dashed">
-          <div className="mx-auto h-12 w-12 text-gray-300 mb-4 bg-gray-50 rounded-full flex items-center justify-center">
-            <Plus size={24} />
+        <div className="text-center py-20 bg-white rounded-2xl border border-gray-100 border-dashed animate-fade-in">
+          <div className="mx-auto h-16 w-16 text-gray-300 mb-4 bg-gray-50 rounded-2xl flex items-center justify-center">
+            <ListChecks size={32} />
           </div>
-          <h3 className="text-lg font-medium text-gray-900">No tasks yet</h3>
-          <p className="mt-1 text-gray-500 mb-6">
-            Get started by creating a new task.
+          <h3 className="text-lg font-semibold text-gray-900">No tasks yet</h3>
+          <p className="mt-1 text-gray-500 mb-6 max-w-xs mx-auto">
+            Start organizing your day by creating your first task.
           </p>
-          <Button onClick={handleCreate} variant="outline">
+          <Button onClick={handleCreate} variant="outline" className="gap-2">
+            <Plus size={16} />
             Create Task
           </Button>
         </div>
       )}
 
       {tasks.length > 0 && (
-        <div className="space-y-8">
+        <div className="space-y-8 animate-fade-in" style={{ animationDelay: '0.15s' }}>
           {pendingTasks.length > 0 && (
             <section>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+              <h2 className="flex items-center gap-2 text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+                <Clock size={14} />
                 Pending ({pendingTasks.length})
               </h2>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -131,7 +183,8 @@ export const TasksPage = () => {
 
           {completedTasks.length > 0 && (
             <section>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+              <h2 className="flex items-center gap-2 text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+                <ListChecks size={14} />
                 Completed ({completedTasks.length})
               </h2>
               <div className="grid gap-4 sm:grid-cols-2 opacity-75 hover:opacity-100 transition-opacity">

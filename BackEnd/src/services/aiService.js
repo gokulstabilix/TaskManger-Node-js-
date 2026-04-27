@@ -23,3 +23,26 @@ exports.summarizeTasks = async (tasks) => {
   const result = await model.generateContent(prompt);
   return result.response.text();
 };
+
+exports.chatWithTasks = async (tasks, userMessage) => {
+  const taskListString = tasks.map(t => 
+    `- ${t.title} (Status: ${t.isCompleted ? 'Done' : 'Pending'}, ID: ${t._id})`
+  ).join('\n');
+
+  const prompt = `
+    You are an AI Task Assistant. You have access to the user's task list below.
+    
+    User's Tasks:
+    ${taskListString}
+
+    User's Question: "${userMessage}"
+
+    Instructions:
+    - Answer the question based on the tasks provided.
+    - If they ask what to do, suggest a 'Pending' task.
+    - Be concise and helpful.
+  `;
+
+  const result = await model.generateContent(prompt);
+  return result.response.text();
+};
