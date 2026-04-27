@@ -1,16 +1,8 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-console.log(
-  `Key length: ${process.env.GEMINI_API_KEY?.length}, Starts with: ${process.env.GEMINI_API_KEY?.substring(0, 4)}`,
-);
 
 // Initialize the API with your Key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-console.log(
-  "Checking Key:",
-  process.env.GEMINI_API_KEY ? "Key is present" : "Key is MISSING",
-);
 
 exports.summarizeTasks = async (tasks) => {
   // Convert our database tasks into a simple string for the AI to read
