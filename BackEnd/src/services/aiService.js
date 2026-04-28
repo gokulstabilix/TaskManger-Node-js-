@@ -2,12 +2,12 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Initialize the API with your Key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
 exports.summarizeTasks = async (tasks) => {
   // Convert our database tasks into a simple string for the AI to read
   const taskListString = tasks
-    .map((t) => `- ${t.title} (${t.isCompleted ? "Completed" : "Pending"})`)
+    .map((t) => `- ${t.title} (Priority: ${t.priority}, Status: ${t.isCompleted ? "Completed" : "Pending"})`)
     .join("\n");
 
   const prompt = `
@@ -26,7 +26,7 @@ exports.summarizeTasks = async (tasks) => {
 
 exports.chatWithTasks = async (tasks, userMessage) => {
   const taskListString = tasks.map(t => 
-    `- ${t.title} (Status: ${t.isCompleted ? 'Done' : 'Pending'}, ID: ${t._id})`
+    `- ${t.title} (Priority: ${t.priority}, Status: ${t.isCompleted ? 'Done' : 'Pending'}, ID: ${t._id})`
   ).join('\n');
 
   const prompt = `

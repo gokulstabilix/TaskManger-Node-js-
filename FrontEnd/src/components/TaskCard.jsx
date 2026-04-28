@@ -51,6 +51,15 @@ export const TaskCard = ({ task, onToggleStatus, onEdit, onDelete }) => {
             )}>
               {task.isCompleted ? "Done" : "Pending"}
             </span>
+            {/* Priority badge */}
+            <span className={cn(
+              "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide shrink-0 border",
+              task.priority === "high" ? "bg-red-50 text-red-600 border-red-100" :
+              task.priority === "medium" ? "bg-blue-50 text-blue-600 border-blue-100" :
+              "bg-slate-50 text-slate-600 border-slate-100"
+            )}>
+              {task.priority}
+            </span>
           </div>
           {task.description && (
             <p className={cn(

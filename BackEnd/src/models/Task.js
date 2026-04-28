@@ -16,6 +16,15 @@ const taskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  priority: {
+    type: String,
+    required: [true, "Priority is required"],
+    enum: {
+      values: ["low", "medium", "high"],
+      message: "{VALUE} is not a valid priority"
+    },
+    default: "medium"
+  },
   createdAt: {
     type: Date,
     default: Date.now,

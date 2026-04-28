@@ -9,6 +9,7 @@ export const TaskForm = ({ task, onSuccess, onCancel }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
+  const [priority, setPriority] = useState('medium');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -17,6 +18,7 @@ export const TaskForm = ({ task, onSuccess, onCancel }) => {
       setTitle(task.title || '');
       setDescription(task.description || '');
       setIsCompleted(task.isCompleted || false);
+      setPriority(task.priority || 'medium');
     }
   }, [task]);
 
@@ -34,6 +36,7 @@ export const TaskForm = ({ task, onSuccess, onCancel }) => {
       title: title.trim(),
       description: description.trim(),
       isCompleted,
+      priority,
     };
 
     try {
@@ -60,7 +63,7 @@ export const TaskForm = ({ task, onSuccess, onCancel }) => {
       
       <Input
         label="Task Title"
-        placeholder="e.g., Buy groceries"
+        placeholder="e.g., Learn react"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         autoFocus
@@ -76,6 +79,21 @@ export const TaskForm = ({ task, onSuccess, onCancel }) => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
+      </div>
+
+      <div className="space-y-1">
+        <label className="block text-sm font-medium text-gray-700">
+          Priority
+        </label>
+        <select
+          className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+        >
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
       </div>
 
       {task && (
