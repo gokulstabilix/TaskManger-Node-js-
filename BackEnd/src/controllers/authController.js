@@ -20,14 +20,14 @@ exports.signup = catchAsync(async (req, res, next) => {
   // 2. Generate the JWT
   const token = signToken(newUser._id);
 
-  // 3. Send response
-  const user = newUser.toObject();
-  
+  // 3. Remove password from output
+  const userObj = newUser.toObject();
+  delete userObj.password;
   res.status(201).json({
     status: "success",
     token,
     data: {
-      user,
+      user: userObj,
     },
   });
 });
