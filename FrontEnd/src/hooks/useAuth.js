@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { signupUser, logout, clearAuthError } from '../store/authSlice';
+import { signupUser, loginUser, logout, clearAuthError } from '../store/authSlice';
 
 /**
  * useAuth — A convenience hook that exposes every auth-related
  * value and action so pages/components never import Redux directly.
  *
  * Usage:
- *   const { user, isAuthenticated, signup, logout } = useAuth();
+ *   const { user, isAuthenticated, signup, login, logout } = useAuth();
  */
 export const useAuth = () => {
   const dispatch = useDispatch();
@@ -15,6 +15,7 @@ export const useAuth = () => {
   );
 
   const signup = (userData) => dispatch(signupUser(userData));
+  const login = (credentials) => dispatch(loginUser(credentials));
   const logoutUser = () => dispatch(logout());
   const clearError = () => dispatch(clearAuthError());
 
@@ -25,6 +26,7 @@ export const useAuth = () => {
     isLoading: status === 'loading',
     error,
     signup,
+    login,
     logout: logoutUser,
     clearError,
   };

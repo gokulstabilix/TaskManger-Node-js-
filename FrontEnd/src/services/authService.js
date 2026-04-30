@@ -17,5 +17,15 @@ export const authService = {
     return response.data;
   },
 
-  // Future: login, forgotPassword, resetPassword, etc.
+  /**
+   * Log in an existing user.
+   * @param {{ email: string, password: string }} credentials
+   * @returns {Promise<{ status: string, token: string, data: { user: object } }>}
+   */
+  login: async (credentials) => {
+    const response = await api.post('/users/login', credentials);
+    return response.data;
+  },
+
+  // Future: forgotPassword, resetPassword, etc.
 };

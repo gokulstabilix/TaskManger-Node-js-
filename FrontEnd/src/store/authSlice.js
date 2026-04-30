@@ -32,6 +32,25 @@ export const signupUser = createAsyncThunk(
   }
 );
 
+export const loginUser = createAsyncThunk(
+  'auth/loginUser',
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const data = await authService.login(credentials);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.data.user));
+      return { token: data.token, user: data.data.user };
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        'Login failed. Please try again.';
+      return rejectWithValue(message);
+    }
+  }
+);
+
 // ── Rehydrate helper ───────────────────────────────────────────
 
 const tokenFromStorage = localStorage.getItem('token');
@@ -80,6 +99,21 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(signupUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      // ── Login ──
+      .addCase(loginUser.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
