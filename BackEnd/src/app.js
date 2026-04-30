@@ -3,6 +3,7 @@ require("dotenv").config();
 const connectDB = require("./config/db");
 const taskRoutes = require("./routes/taskRoutes");
 const globalErrorHandler = require("./middlewares/errorMiddleware");
+const userRoutes = require("./routes/userRoutes");
 
 // Connect to database
 connectDB();
@@ -19,6 +20,8 @@ app.get("/health", (req, res) => {
 
 // Mount the router
 app.use("/api/tasks", taskRoutes);
+
+app.use("/api/users", userRoutes);
 
 // Global Error Handling Middleware (must be after all routes)
 app.use(globalErrorHandler);
