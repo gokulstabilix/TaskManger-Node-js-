@@ -8,6 +8,7 @@ export const fetchTasks = createAsyncThunk(
     try {
       const response = await taskService.getAllTasks();
       // Backend returns { status: 'success', data: [...] }
+      // taskService already unwraps axios response.data, so 'response' = { status, data }
       return response.data || [];
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch tasks');
@@ -20,7 +21,9 @@ export const createTask = createAsyncThunk(
   async (taskData, { rejectWithValue }) => {
     try {
       const response = await taskService.createTask(taskData);
-      return response.data;
+      // Backend returns { status: 'success', data: { task: {...} } }
+      // response = { status, data: { task } }, so extract the actual task object
+      return response.data?.task || response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to create task');
     }
@@ -32,6 +35,8 @@ export const updateTask = createAsyncThunk(
   async ({ id, taskData }, { rejectWithValue }) => {
     try {
       const response = await taskService.updateTask(id, taskData);
+      // Backend returns { status: 'success', data: task }
+      // response = { status, data: task }, so extract the task object
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update task');
@@ -60,7 +65,9 @@ const initialState = {
 const taskSlice = createSlice({
   name: 'tasks',
   initialState,
-  reducers: {},
+  reducers: {
+    resetTasks: () => initialState,
+  },
   extraReducers: (builder) => {
     builder
       // Fetch Tasks
@@ -94,4 +101,5 @@ const taskSlice = createSlice({
   },
 });
 
+export const { resetTasks } = taskSlice.actions;
 export default taskSlice.reducer;

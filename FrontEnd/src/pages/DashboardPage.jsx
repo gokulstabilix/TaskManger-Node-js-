@@ -45,7 +45,7 @@ export const DashboardPage = () => {
   // ── Handlers ──────────────────────────────────────────────
   const handleLogout = () => {
     logout();
-    navigate('/signup', { replace: true });
+    navigate('/login', { replace: true });
   };
 
   const handleCreate = () => { setEditingTask(null); setIsModalOpen(true); };

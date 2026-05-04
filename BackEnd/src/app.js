@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const taskRoutes = require("./routes/taskRoutes");
 const globalErrorHandler = require("./middlewares/errorMiddleware");
 const userRoutes = require("./routes/userRoutes");
+const cookieParser = require('cookie-parser');
 
 // Connect to database
 connectDB();
@@ -12,6 +13,9 @@ const app = express();
 
 // Middleware to parse JSON bodies (essential for CRUD)
 app.use(express.json());
+
+// Cookie Parser Middleware
+app.use(cookieParser());
 
 // A simple "Health Check" route
 app.get("/health", (req, res) => {

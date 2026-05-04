@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const taskController = require("../controllers/taskController");
+const authController = require('../controllers/authController');
+
+// This will protect ALL routes defined after this line
+router.use(authController.protect);
 
 // This maps to POST http://localhost:3000/api/tasks/
 router.post("/", taskController.createTask);
