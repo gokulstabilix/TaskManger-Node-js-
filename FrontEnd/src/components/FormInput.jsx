@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 /**
  * FormInput — A reusable, accessible form field with built-in error display.
@@ -23,6 +24,9 @@ export const FormInput = ({
   icon,
   ...rest
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === 'password';
+
   return (
     <div className="space-y-1.5">
       <label
@@ -41,7 +45,7 @@ export const FormInput = ({
         <input
           id={id}
           name={id}
-          type={type}
+          type={isPassword ? (showPassword ? 'text' : 'password') : type}
           value={value}
           onChange={onChange}
           aria-invalid={!!error}
@@ -52,6 +56,7 @@ export const FormInput = ({
             placeholder:text-gray-400
             focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500
             ${icon ? 'pl-10' : ''}
+            ${isPassword ? 'pr-11' : ''}
             ${
               error
                 ? 'border-red-400 bg-red-50/50 focus:ring-red-400/30 focus:border-red-400'
@@ -60,6 +65,18 @@ export const FormInput = ({
           `}
           {...rest}
         />
+
+        {isPassword && (
+          <button
+            type="button"
+            tabIndex={-1}
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        )}
       </div>
 
       {error && (
@@ -81,3 +98,4 @@ export const FormInput = ({
     </div>
   );
 };
+

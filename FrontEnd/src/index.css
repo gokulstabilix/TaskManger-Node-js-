@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ============================================================
    Design System — Theme Tokens & Dark Mode
@@ -19,14 +20,26 @@
 
 /* ── Light mode base ── */
 @layer base {
-  body {
+  html, body {
     @apply bg-gray-50 text-gray-900 antialiased font-sans;
     transition: background-color 0.3s ease, color 0.3s ease;
+    scrollbar-gutter: stable;
+  }
+
+  button, 
+  [role="button"], 
+  a, 
+  input[type="submit"], 
+  input[type="button"], 
+  input[type="reset"], 
+  select, 
+  label[for] {
+    cursor: pointer;
   }
 }
 
 /* ── Dark mode overrides ── */
-.dark body {
+.dark html, .dark body {
   background-color: #0f0d1a;
   color: #e2e8f0;
 }
@@ -110,4 +123,26 @@
 
 .animate-slide-up {
   animation: slide-up 0.5s ease both;
+}
+
+/* ── Custom UI Utilities ── */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass {
+  background: rgba(26, 23, 48, 0.6);
+  border-color: rgba(139, 92, 246, 0.15);
+}
+
+/* Hide scrollbar for sidebar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

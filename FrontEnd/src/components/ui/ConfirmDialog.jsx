@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import { Button } from './Button';
 import { cn } from '../../utils/cn';
 
@@ -7,8 +7,9 @@ export const ConfirmDialog = ({
   isOpen,
   onClose,
   onConfirm,
-  title = 'Are you sure?',
-  message = 'This action cannot be undone.',
+  title = 'Delete Task',
+  message = 'Are you sure you want to delete this task?',
+  taskTitle = '',
   confirmLabel = 'Delete',
   cancelLabel = 'Cancel',
   variant = 'danger',
@@ -29,67 +30,71 @@ export const ConfirmDialog = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity animate-in fade-in duration-300"
         onClick={onClose}
       />
 
       {/* Dialog */}
       <div
         className={cn(
-          'relative z-50 w-full max-w-sm transform overflow-hidden rounded-2xl bg-white p-6 text-left shadow-2xl transition-all',
-          'animate-in fade-in zoom-in-95 duration-200'
+          'relative z-[100] w-full max-w-sm transform overflow-hidden rounded-2xl bg-white dark:bg-[#1a1730] p-6 text-left shadow-2xl transition-all',
+          'animate-in zoom-in-95 duration-200'
         )}
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
         aria-describedby="confirm-dialog-message"
       >
-        {/* Icon */}
-        <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-red-50">
-          <AlertTriangle className="w-6 h-6 text-red-500" strokeWidth={2} />
-        </div>
-
         {/* Title */}
         <h3
           id="confirm-dialog-title"
-          className="text-center text-lg font-semibold text-gray-900 mb-1"
+          className="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-2"
         >
           {title}
         </h3>
+        <div className="h-px w-full bg-gray-100 dark:bg-white/10 mb-6" />
 
         {/* Message */}
-        <p
-          id="confirm-dialog-message"
-          className="text-center text-sm text-gray-500 mb-6"
-        >
-          {message}
-        </p>
+        <div className="mb-6 space-y-4">
+          <p
+            id="confirm-dialog-message"
+            className="text-sm text-gray-600 dark:text-gray-300"
+          >
+            {message}
+          </p>
+          {/* {taskTitle && (
+            <p className="text-base font-bold text-gray-900 dark:text-white">
+              {taskTitle}
+            </p>
+          )} */}
+        </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="flex justify-end gap-3 mt-6">
           <Button
-            variant="outline"
-            className="flex-1"
+            variant="ghost"
             onClick={onClose}
+            className="bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 text-gray-700 dark:text-white border-none"
           >
             {cancelLabel}
           </Button>
           <Button
-            variant={variant}
-            className="flex-1"
+            variant="danger"
             onClick={() => {
               onConfirm();
               onClose();
             }}
+            className="bg-red-500 hover:bg-red-600 text-white border-none"
           >
             {confirmLabel}
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Input } from './ui/Input';
 import { Button } from './ui/Button';
 import { createTask, updateTask } from '../store/taskSlice';
 
@@ -54,74 +53,99 @@ export const TaskForm = ({ task, onSuccess, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md">
+        <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-500/10 dark:text-red-400 rounded-xl border border-red-100 dark:border-red-500/20">
           {error}
         </div>
       )}
       
-      <Input
-        label="Task Title"
-        placeholder="e.g., Learn react"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        autoFocus
-      />
+      <div className="space-y-1.5">
+        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+          Task Title
+        </label>
+        <input
+          className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1333] px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all shadow-sm"
+          placeholder="e.g., Learn react"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          autoFocus
+        />
+      </div>
       
-      <div className="space-y-1">
-        <label className="block text-sm font-medium text-gray-700">
-          Description (Optional)
+      <div className="space-y-1.5">
+        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+          Description
         </label>
         <textarea
-          className="flex min-h-[100px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="flex min-h-[120px] w-full rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1333] px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all shadow-sm resize-none"
           placeholder="Add more details about this task..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
 
-      <div className="space-y-1">
-        <label className="block text-sm font-medium text-gray-700">
-          Priority
-        </label>
-        <select
-          className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-        >
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+            Priority
+          </label>
+          <div className="relative">
+            <select
+              className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1333] px-4 py-3 pr-8 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all shadow-sm appearance-none"
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+            >
+              <option value="high">High (Do First)</option>
+              <option value="medium">Medium (Schedule)</option>
+              <option value="low">Low (Delegate)</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+            Status
+          </label>
+          <div className="relative">
+            <select
+              className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1333] px-4 py-3 pr-8 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all shadow-sm appearance-none"
+              value={isCompleted ? "completed" : "pending"}
+              onChange={(e) => setIsCompleted(e.target.value === "completed")}
+            >
+              <option value="pending">PENDING</option>
+              <option value="completed">COMPLETED</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {task && (
-        <label className="flex items-center gap-2 cursor-pointer mt-2">
-          <input
-            type="checkbox"
-            className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-            checked={isCompleted}
-            onChange={(e) => setIsCompleted(e.target.checked)}
-          />
-          <span className="text-sm text-gray-700">Mark as completed</span>
-        </label>
-      )}
-
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+      <div className="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-white/10 mt-6">
         <Button
           type="button"
           variant="ghost"
           onClick={onCancel}
           disabled={isSubmitting}
+          className="bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 text-gray-700 dark:text-white border-none"
         >
           Cancel
         </Button>
         <Button
           type="submit"
           isLoading={isSubmitting}
+          className="bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 border-none shadow-lg shadow-primary-500/30 text-white"
         >
-          {task ? 'Update Task' : 'Create Task'}
+          {task ? 'Save Changes' : 'Create Task'}
         </Button>
       </div>
     </form>

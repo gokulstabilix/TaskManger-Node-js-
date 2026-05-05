@@ -1,94 +1,73 @@
 import React from 'react';
 import { format } from 'date-fns';
-import { CheckCircle2, Circle, Edit, Trash2, Clock } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import { cn } from '../utils/cn';
 
-/**
- * TaskCard — Displays a single task.
- *
- * What changed:
- *  - Added a colored left border accent (green = completed, indigo = pending)
- *  - Added a status badge chip (Pending / Done)
- *  - Enhanced hover animation with slight upward lift
- *  - Dark mode support via dark: classes
- *  - Better visual hierarchy with spacing adjustments
- *
- * All props remain the same — no breaking changes.
- */
 export const TaskCard = ({ task, onToggleStatus, onEdit, onDelete }) => {
+  const isCompleted = task.isCompleted;
+
   return (
-    <div className={cn(
-      "group relative flex flex-col justify-between gap-4 rounded-xl border bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5",
-      task.isCompleted
-        ? "border-gray-200 bg-gray-50/50 border-l-4 border-l-green-400"
-        : "border-gray-200 border-l-4 border-l-primary-500"
-    )}>
-      <div className="flex items-start gap-4">
+    <div className="group relative flex flex-col justify-between gap-4 rounded-2xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 p-5 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/10 hover:-translate-y-1">
+      {/* Top Header: Status & Priority */}
+      <div className="flex items-center justify-between">
         <button
           onClick={() => onToggleStatus(task)}
           className={cn(
-            "mt-1 shrink-0 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500",
-            task.isCompleted ? "text-green-500" : "text-gray-300 hover:text-primary-500"
+            "inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-500",
+            isCompleted
+              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300 hover:bg-emerald-200"
+              : "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 hover:bg-amber-200"
           )}
         >
-          {task.isCompleted ? <CheckCircle2 size={24} /> : <Circle size={24} />}
+          {isCompleted ? "COMPLETED" : "PENDING"}
         </button>
         
-        <div className="flex-1 space-y-1.5">
-          <div className="flex items-center gap-2">
-            <h4 className={cn(
-              "text-base font-semibold leading-snug",
-              task.isCompleted ? "text-gray-500 line-through" : "text-gray-900"
-            )}>
-              {task.title}
-            </h4>
-            {/* Status badge */}
-            <span className={cn(
-              "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide shrink-0",
-              task.isCompleted
-                ? "bg-green-50 text-green-600 border border-green-100"
-                : "bg-amber-50 text-amber-600 border border-amber-100"
-            )}>
-              {task.isCompleted ? "Done" : "Pending"}
-            </span>
-            {/* Priority badge */}
-            <span className={cn(
-              "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide shrink-0 border",
-              task.priority === "high" ? "bg-red-50 text-red-600 border-red-100" :
-              task.priority === "medium" ? "bg-blue-50 text-blue-600 border-blue-100" :
-              "bg-slate-50 text-slate-600 border-slate-100"
-            )}>
-              {task.priority}
-            </span>
-          </div>
-          {task.description && (
-            <p className={cn(
-              "text-sm line-clamp-2",
-              task.isCompleted ? "text-gray-400" : "text-gray-600"
-            )}>
-              {task.description}
-            </p>
-          )}
-        </div>
+        <span className={cn(
+          "inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
+          task.priority === "high" ? "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300" :
+          task.priority === "medium" ? "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300" :
+          "bg-slate-100 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300"
+        )}>
+          {task.priority || "LOW"}
+        </span>
       </div>
-      
-      <div className="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
-        <span className="flex items-center gap-1.5 text-xs text-gray-400">
-          <Clock size={12} />
+
+      {/* Content */}
+      <div className="space-y-2 flex-1">
+        <h4 className={cn(
+          "text-base font-bold leading-tight",
+          isCompleted ? "text-gray-400 line-through dark:text-gray-500" : "text-gray-900 dark:text-white"
+        )}>
+          {task.title}
+        </h4>
+        {task.description && (
+          <p className={cn(
+            "text-sm line-clamp-2",
+            isCompleted ? "text-gray-400 dark:text-gray-600" : "text-gray-600 dark:text-gray-400"
+          )}>
+            {task.description}
+          </p>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between pt-2">
+        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
           {task.createdAt ? format(new Date(task.createdAt), 'MMM d, yyyy') : 'No date'}
         </span>
         
-        <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+        {/* Actions (visible on hover) */}
+        <div className="flex items-center gap-1">
           <button
             onClick={() => onEdit(task)}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-primary-600 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors"
+            className="rounded-lg p-1.5 text-gray-400 hover:bg-primary-50 hover:text-primary-600 dark:hover:bg-white/10 dark:hover:text-primary-400 focus:opacity-100 focus:outline-none transition-colors"
             aria-label="Edit task"
           >
             <Edit size={16} />
           </button>
           <button
             onClick={() => onDelete(task._id)}
-            className="rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 transition-colors"
+            className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-white/10 dark:hover:text-red-400 focus:opacity-100 focus:outline-none transition-colors"
             aria-label="Delete task"
           >
             <Trash2 size={16} />
