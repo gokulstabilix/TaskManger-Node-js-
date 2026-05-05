@@ -69,36 +69,8 @@ export const DashboardPage = () => {
       </div>
 
       {/* ── AI Insights Box ── */}
-      <div className="rounded-2xl bg-gradient-to-r from-[#2c1d59] via-[#462d7a] to-[#633eb3] p-8 text-white shadow-xl shadow-[#462d7a]/20 border border-white/10 relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-        <div className="absolute bottom-0 left-10 w-40 h-40 bg-purple-500/20 rounded-full blur-2xl translate-y-1/2"></div>
-        
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6">
-          <div className="flex-1">
-            <h2 className="text-2xl font-bold flex items-center gap-2 mb-4">
-              ✨ AI Insights
-            </h2>
-            <ul className="space-y-2 text-white/90 font-medium text-sm">
-              <li className="flex items-start gap-2">
-                <span className="text-purple-300">•</span> 
-                Prioritize high-priority tasks for maximum impact.
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-purple-300">•</span> 
-                Consider allocating more time for research in your morning schedule.
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-purple-300">•</span> 
-                Your focus is best on complex tasks between 10 AM and 12 PM.
-              </li>
-            </ul>
-          </div>
-          {/* Note: I'm keeping the original AISummaryCard component logic available if it's dynamic, 
-              but the screenshot shows static text for "AI Insights". If the original AISummaryCard 
-              did real API calls, we could use it here inside this box, but for now this matches the UI exactly. */}
-        </div>
-      </div>
+      <AISummaryCard />
+
 
       {/* ── My Tasks Section ── */}
       <div>

@@ -107,7 +107,6 @@ export const TasksPage = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/50 dark:bg-white/5 border-b border-gray-200 dark:border-white/10">
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Select</th>
                 <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Task Title</th>
                 <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</th>
                 <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Priority</th>
@@ -119,14 +118,6 @@ export const TasksPage = () => {
               {filteredTasks.length > 0 ? (
                 filteredTasks.map((task) => (
                   <tr key={task._id} className="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors group">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <input
-                        type="checkbox"
-                        checked={task.isCompleted}
-                        onChange={() => dispatch(updateTask({ id: task._id, taskData: { isCompleted: !task.isCompleted } }))}
-                        className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                      />
-                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <p className={cn("text-sm font-semibold", task.isCompleted ? "text-gray-400 line-through" : "text-gray-900 dark:text-white")}>
                         {task.title}
